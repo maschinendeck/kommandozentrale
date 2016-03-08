@@ -4,7 +4,6 @@ from autobahn.asyncio.websocket import WebSocketServerProtocol, \
 import asyncio
 import json
 import importlib
-
 class KommandozentraleServerProtocol(WebSocketServerProtocol):
     config = {"switchModule":"switch_classes","switches": {}}
     def __init__(self, config="config.json"):
@@ -20,9 +19,9 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
             if req["action"] == "call_method":
                 switch_class = self.config['switches'][req['switch']]['class']
                 if "initial_data" in self.config['switches'][req['switch']]:
-                    switch = getattr(self.config["switchModule"], switch_class)(self.config['switches'][req['switch']]['initial_data'])
+                    switch = getattr(self.config["switchModule"], switch_class)(self.config['switches'][req['switch']]['initial_data'], name=req['switch'])
                 else:
-                    switch = getattr(self.config["switchModule"], switch_class)()
+                    switch = getattr(self.config["switchModule"], switch_class)(name=req['switch'])
                 method = getattr(switch, req['method'])
                 if "data" in req:
                     method(req["data"])
@@ -37,6 +36,8 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
             else:
                 msg = {"result":"error", "error":"Action not found"}
                 self.sendMessage(json.dumps(msg).encode("utf8"))
+
+
 if __name__ == '__main__':
 
     factory = WebSocketServerFactory(u"ws://localhost:9000")
@@ -45,7 +46,7 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     server = loop.create_server(factory, 'localhost', 9000)
     ruc = loop.run_until_complete(server)
-    print("started")
+    print("Started")
     try:
         loop.run_forever()
     except KeyboardInterrupt:
