@@ -1,8 +1,14 @@
 {
 	"switchModule":"switch_classes",
 	"switches": {
-		"exampleSwitch": {
-			"class": "ExampleOnOffSwitch"
+		"hauptraum/decke_rechts": {
+			"class": "LightSwitch"
+		},
+		"hauptraum/decke_links": {
+			"class": "LightSwitch"
+		},
+		"hauptraum/halogen_fenster": {
+			"class": "LightSwitch"
 		}
 	}
 }

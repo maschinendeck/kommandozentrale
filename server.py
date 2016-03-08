@@ -29,6 +29,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                     method()
                 res = {"result":"state", "switch":req["switch"], "state":switch.getState()}
                 self.sendMessage(json.dumps(res).encode("utf8"))
+                print("New State of",req["switch"],"is ",switch.getState())
             elif req["action"] == "get_config":
                 # TODO: send better config (client doesn't need class names etc)
                 msg = {"result":"config", "config":self.config}

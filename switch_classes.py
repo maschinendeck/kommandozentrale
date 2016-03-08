@@ -20,7 +20,7 @@ class SwitchClass():
 		return self.state
 
 
-class ExampleOnOffSwitch(SwitchClass):
+class LightSwitch(SwitchClass):
 	methods = ["on", "off"]
 
 	def on(self):
