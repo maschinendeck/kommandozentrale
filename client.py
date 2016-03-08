@@ -9,19 +9,22 @@ class KommandozentraleClientProtocol(WebSocketClientProtocol):
 
     def onOpen(self):
         x = {"action":"call_method", "switch":"exampleSwitch","method":random.choice(["on", "off"])}
-        print(x)
         self.sendMessage(json.dumps(x).encode('utf8'))
         if "data" in x:
             print('{switch}: {method}({data})'.format(**x))
         else:
             print('{switch}: {method}()'.format(**x))
+        x = {"action":"get_config"}
+        self.sendMessage(json.dumps(x).encode('utf8'))
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
             res = json.loads(payload.decode('utf8'))
             if res["result"] == "state":
                 print("State of {switch}: {state}".format(**res))
-            self.sendClose()
+            elif res["result"] == "config":
+                print(res)
+                self.sendClose()
 
     def onClose(self, wasClean, code, reason):
         loop.stop()

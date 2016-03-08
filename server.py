@@ -12,27 +12,46 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
             self.config.update(json.load(configfile))
         self.config['switchModule'] = importlib.import_module(self.config['switchModule'])
 
+    def getSwitch(self, name):
+        switch_config = self.config['switches'][name]
+        switch_class = switch_config['class']
+        initial_data = switch_config['initial_data'] if "initial_data" in switch_config else {}
+        switch = getattr(self.config["switchModule"], switch_class)(initial_data, name=name)
+        return switch
+
+    def getClientConfig(self):
+        client_config = {}
+        for switch, data in self.config["switches"].items():
+            switch_class = self.getSwitch(switch)
+            client_config[switch] = {"methods":switch_class.methods}
+        return client_config
+
+    def callMethod(self, req):
+        switch = self.getSwitch(req['switch'])
+        method = getattr(switch, req['method'])
+        if "data" in req:
+            method(req["data"])
+        else:
+            method()
+        return switch.getState()
+
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):
+        """ Handle messages """
         if not isBinary:
             req = json.loads(payload.decode('utf8'))
+
             if req["action"] == "call_method":
-                switch_class = self.config['switches'][req['switch']]['class']
-                if "initial_data" in self.config['switches'][req['switch']]:
-                    switch = getattr(self.config["switchModule"], switch_class)(self.config['switches'][req['switch']]['initial_data'], name=req['switch'])
-                else:
-                    switch = getattr(self.config["switchModule"], switch_class)(name=req['switch'])
-                method = getattr(switch, req['method'])
-                if "data" in req:
-                    method(req["data"])
-                else:
-                    method()
-                res = {"result":"state", "switch":req["switch"], "state":switch.getState()}
+                state = self.callMethod(req)
+                res = {"result":"state", "switch":req["switch"], "state":state}
                 self.sendMessage(json.dumps(res).encode("utf8"))
+
             elif req["action"] == "get_config":
-                # TODO: send better config (client doesn't need class names etc)
-                msg = {"result":"config", "config":self.config}
+                # TODO: send better config
+                client_config = self.getClientConfig()
+                msg = {"result":"config", "config":client_config}
                 self.sendMessage(json.dumps(msg).encode("utf8"))
+
             else:
                 msg = {"result":"error", "error":"Action not found"}
                 self.sendMessage(json.dumps(msg).encode("utf8"))
@@ -46,7 +65,7 @@ if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     server = loop.create_server(factory, 'localhost', 9000)
     ruc = loop.run_until_complete(server)
-    print("Started")
+    print("Started, listening on port 9000")
     try:
         loop.run_forever()
     except KeyboardInterrupt:
