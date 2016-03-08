@@ -14,21 +14,26 @@ class SwitchClass():
 			if self.name in db:
 				return db[self.name]
 			else:
-				db[self.name] = False
+				self.setState(False)
 
 	def getState(self):
 		return self.state
+
+	def setState(self, state):
+		with shelve.open('kommandozentrale.db') as db:
+			db[self.name] = state
+		self.state = state
 
 
 class ExampleOnOffSwitch(SwitchClass):
 	methods = ["on", "off"]
 
 	def on(self):
-		self.state = True
+		self.setState(True)
 		return self.state
 
 	def off(self):
-		self.state = False
+		self.setState(False)
 		return self.state
 
 
