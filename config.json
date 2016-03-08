@@ -1,0 +1,8 @@
+{
+	"switchModule":"switch_classes",
+	"switches": {
+		"exampleSwitch": {
+			"class": "OnOffSwitch"
+		}
+	}
+}
