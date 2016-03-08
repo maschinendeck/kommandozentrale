@@ -2,7 +2,7 @@
 	"switchModule":"switch_classes",
 	"switches": {
 		"exampleSwitch": {
-			"class": "OnOffSwitch"
+			"class": "ExampleOnOffSwitch"
 		}
 	}
 }
