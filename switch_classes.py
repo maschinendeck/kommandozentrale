@@ -6,9 +6,9 @@ class SwitchClass():
 		initial_data.update(kwargs)
 		for k,v in initial_data.items():
 			setattr(self, k, v)
-		self.state = self.getCurrentState()
+		self.state = self.loadState()
 
-	def getCurrentState(self):
+	def loadState(self):
 		# get state from cache
 		with shelve.open('kommandozentrale.db') as db:
 			if self.name in db:
