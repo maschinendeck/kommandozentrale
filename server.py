@@ -11,7 +11,7 @@ class KommandozentraleServerFactory(WebSocketServerFactory):
     def __init__(self, url):
         WebSocketServerFactory.__init__(self, url)
         self.clients = []
- 
+
     def register(self, client):
         if client not in self.clients:
             self.clients.append(client)

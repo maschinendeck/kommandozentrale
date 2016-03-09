@@ -12,11 +12,16 @@ class SwitchClass():
 
     def loadState(self):
         # get state from cache
+        state = None
+
         with shelve.open('kommandozentrale.db') as db:
             if self.name in db:
-                return db[self.name]
-            else:
-                self.setState(False)
+                state = db[self.name]
+
+        if state == None:
+            self.setState(False)
+        else:
+            return state
 
     def getState(self):
         return self.state
