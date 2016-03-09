@@ -34,7 +34,7 @@ class SwitchClass():
                 if hasattr(method, "client_information"):
                     methods.append((method_name,method.client_information))
                 else:
-                    methods.append((method_name,))
+                    methods.append((method_name,{}))
         return methods
 
 
