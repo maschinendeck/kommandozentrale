@@ -12,7 +12,16 @@ window.onload = function() {
         console.log("Text message received: " + e.data);
         var result = JSON.parse(e.data);
 
-        on_light_message(result["switch"], result["state"]);
+        if(result["result"] == "state") {
+            on_light_message(result["switch"], result["state"]);
+        }
+
+
+        if(result["result"] == "config") {
+            addButtons(result["config"]);
+        } 
+
+        
     }
     socket.onclose = function(e) {
        console.log("Connection closed.");
@@ -21,7 +30,7 @@ window.onload = function() {
     }
 
 
-
+    initLights();
 
 
  };
@@ -31,11 +40,27 @@ function initLights() {
     if (isopen) {
        var jsonstring = JSON.stringify({"action":"get_config"})
        socket.send(jsonstring);
-       console.log("Text message sent: " + jsonstring);               
+       console.log("Text message sent: " + jsonstring);
     } else {
        console.log("Connection not opened.")
     }
 }
+
+
+function addButtons(config) {
+    //add buttons
+    $(".lightswitch-pane").each(function() {
+console.log(config);
+    // go thru the main array
+    for (var key in config) {
+        // go thru the inner arrays
+        console.log("Do");
+        $(".lightswitch-pane").append($('<button type="button" class="btn btn-light" data-topic="'+ key +'"></button>', { class: 'alpha_li', text: config[key]["name"] }));
+    }       
+});
+}
+
+
 
  function sendData(data_action, data_switch, data_method) {
     if (isopen) {

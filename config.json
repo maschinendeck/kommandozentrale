@@ -2,13 +2,16 @@
 	"switchModule":"switch_classes",
 	"switches": {
 		"hauptraum/decke_rechts": {
-			"class": "LightSwitch"
+			"class": "LightSwitch",
+			"name": "Decke Rechts"
 		},
 		"hauptraum/decke_links": {
-			"class": "LightSwitch"
+			"class": "LightSwitch",
+			"name": "Decke Links"
 		},
 		"hauptraum/halogen_fenster": {
-			"class": "LightSwitch"
+			"class": "LightSwitch",
+			"name": "Halogen Fenster"
 		}
 	}
 }
