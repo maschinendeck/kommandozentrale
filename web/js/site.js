@@ -7,9 +7,6 @@ app.controller('MainController', ['$scope', function ($scope) {
         $scope.isopen = false;
         initSocket();
     }
-    init()
-
-
 
     function initSocket() {
         $scope.socket = new WebSocket("ws://127.0.0.1:9000");
@@ -34,6 +31,7 @@ app.controller('MainController', ['$scope', function ($scope) {
             console.log("Connection closed.");
             $scope.socket = null;
             $scope.isopen = false;
+            $scope.$apply();
         }
 
     }
@@ -72,5 +70,7 @@ app.controller('MainController', ['$scope', function ($scope) {
         data = {"action":"call_method", "switch":data_switch, "method":data_method};
         sendData(data);
     }
+
+    init();
 
 }]);

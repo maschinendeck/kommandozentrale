@@ -12,30 +12,16 @@
     line-height: 180px;
 
     color: #ffffff;
-    background-color: #ff0039;
+    background-color: #ff0000;
 
     margin: 2px;
 
 }
 .btn-light.on{
-    width: 120px !important;
-    height: 120px;
-    background-image: url(../img/bulb_off.png);
-    background-position: center top;
-    background-size: 50% auto;
-    background-repeat: no-repeat;
-    -moz-background-origin: content;          /* Firefox 1.0-3.6 */
-    -webkit-background-origin: content-box;   /* Safari, Chrome */
-    background-origin: content-box;           /* Firefox 4.0+ */
-    
-    line-height: 180px;
-
-    color: #ffffff;
     background-color: #00ff00;
-
-    margin: 2px;
-
+    background-image: url(../img/bulb_on.png);
 }
+
 .btn-container {
     display: inline
 }
