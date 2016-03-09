@@ -52,11 +52,8 @@ function addButtons(config) {
     //add buttons
     $(".lightswitch-pane").each(function() {
 console.log(config);
-    // go thru the main array
     for (var key in config) {
-        // go thru the inner arrays
-        console.log("Do");
-        $(".lightswitch-pane").append($('<button type="button" class="btn btn-light" data-topic="'+ key +'"></button>', { class: 'alpha_li', text: config[key]["name"] }));
+        $(".lightswitch-pane").append('<button type="button" class="btn btn-light" data-topic="'+ key +'">'+ config[key]["metadata"]["location"] +'</button>');
     }       
 });
 }
