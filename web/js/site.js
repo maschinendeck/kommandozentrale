@@ -40,13 +40,6 @@ app.controller('MainController', ['$scope', function ($scope) {
         switch_light(event.target.getAttribute("data-topic"), !light.hasClass("on"));
     };
     function onState(switchname, state) {
-        if ($scope.config[switchname].metadata.type == "bool") {
-            on_light_message(switchname, state);
-        } else {
-            console.log("Got unknown switch type");
-        }
-    }
-    function on_light_message(switchname, state) {
         $scope.config[switchname].state = state;
         $scope.$apply();
     }
