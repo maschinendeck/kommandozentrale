@@ -28,9 +28,7 @@ app.controller('MainController', ['$scope', function ($scope) {
 
             if(result["result"] == "config") {
                 $scope.config = result["config"];
-            } 
-
-            
+            }
         }
         $scope.socket.onclose = function(e) {
             console.log("Connection closed.");
@@ -38,12 +36,9 @@ app.controller('MainController', ['$scope', function ($scope) {
             $scope.isopen = false;
         }
 
-        getConfig();
     }
     $scope.lightClick = function(event) {
-        console.log("lightClick")
         light = angular.element(event.target);
-        console.log(Object.getOwnPropertyNames(light))
         switch_light(event.target.getAttribute("data-topic"), !light.hasClass("on"));
     };
     function on_light_message(switchname, state) {
@@ -72,11 +67,10 @@ app.controller('MainController', ['$scope', function ($scope) {
             console.log("Connection not opened.")
         }
     }
+
     function callMethod(data_switch, data_method) {
         data = {"action":"call_method", "switch":data_switch, "method":data_method};
         sendData(data);
     }
-
-
 
 }]);
