@@ -63,6 +63,9 @@ class ExampleOnOffSwitch(SwitchClass):
         return self.state
 
 class LightSwitch(SwitchClass):
+    def getClientInformation(self):
+        return {"location":self.location}
+
     @publicMethod
     def on(self):
         self.setState(True)
