@@ -39,13 +39,10 @@ app.controller('MainController', ['$scope', function ($scope) {
         light = angular.element(event.target);
         switch_light(event.target.getAttribute("data-topic"), !light.hasClass("on"));
     };
+
     function on_light_message(switchname, state) {
-        var button = angular.element(document.querySelectorAll('[data-topic="' + switchname + '"]'));
-        if (button && state) {
-            button.addClass('on');
-        } else {
-            button.removeClass('on');
-        }
+        $scope.config[switchname].state = state;
+        $scope.$apply();
     }
 
     function switch_light(topic, on) {
