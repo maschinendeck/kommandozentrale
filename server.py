@@ -5,7 +5,8 @@ import importlib
 from autobahn.asyncio.websocket import WebSocketServerProtocol, \
     WebSocketServerFactory
 
-from exceptions import NotAllowedException
+from exceptions import NotAllowedException, NotFoundException
+
 class KommandozentraleServerFactory(WebSocketServerFactory):
 
     def __init__(self, url):
@@ -47,11 +48,14 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
 
 
     def getSwitch(self, name):
-        switch_config = self.config['switches'][name]
-        switch_class = switch_config['class']
-        initial_data = switch_config
-        switch = getattr(self.config["switchModule"], switch_class)(initial_data=initial_data, name=name)
-        return switch
+        if name in self.config['switches']:
+            switch_config = self.config['switches'][name]
+            switch_class = switch_config['class']
+            initial_data = switch_config
+            switch = getattr(self.config["switchModule"], switch_class)(initial_data=initial_data, name=name)
+            return switch
+        else:
+            raise NotFoundException("Switch with name {0} not found".format(name))
 
     def getClientConfig(self):
         client_config = {}
@@ -87,8 +91,8 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                     state = self.callMethod(req)
                     res = {"result":"state", "switch":req["switch"], "state":state}
                     self.factory.broadcast(res)
-                except NotAllowedException as e:
-                    error = repr(e)
+                except (NotAllowedException, NotFoundException) as e:
+                    error = str(e)
                     res = {"result":"error", "error":error}
                 self.sendMessage(json.dumps(res).encode("utf8"))
 
