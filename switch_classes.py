@@ -30,10 +30,8 @@ class SwitchClass():
         for method_name in dir(self):
             method = getattr(self, method_name)
             if hasattr(method, "is_public") and method.is_public:
-                if hasattr(method, "client_information"):
-                    methods.append((method_name,method.client_information))
-                else:
-                    methods.append((method_name,{}))
+                client_information = self.getClientInformation()
+                methods.append((method_name,method.client_information))
         return methods
 
     def getFromDatabase(self, key, file="kommandozentrale.db", default=None):
@@ -46,6 +44,12 @@ class SwitchClass():
     def saveToDatabase(self, key, value, file="kommandozentrale.db"):
         with shelve.open(file) as db:
             db[key] = value
+
+    def getClientInformation(self):
+        if hasattr(method, "client_information"):
+            return method.client_information
+        else:
+            return {}
 
 class ExampleOnOffSwitch(SwitchClass):
     @publicMethod
