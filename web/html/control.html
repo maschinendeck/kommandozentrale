@@ -1,0 +1,8 @@
+<div id="control">
+	<div ng-if="isopen" ng-repeat="(key, value) in config" class="btn-container">
+		<button ng-if='value["metadata"]["type"] == "bool"' type="button" class="btn btn-light" ng-class='value["state"] ? "on" : "off"' data-topic="{{key}}" ng-click="lightClick($event)">{{value["metadata"]["location"]}}</button>
+	</div>
+	<div ng-if="!isopen">
+		Connection to Server is NOT open, please reload!
+	</div>
+</div>
