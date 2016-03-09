@@ -30,7 +30,7 @@ class SwitchClass():
         for method_name in dir(self):
             method = getattr(self, method_name)
             if hasattr(method, "is_public") and method.is_public:
-                client_information = self.getClientInformation()
+                client_information = self.getMethodClientInformation(method)
                 methods.append((method_name,client_information))
         return methods
 
@@ -45,9 +45,15 @@ class SwitchClass():
         with shelve.open(file) as db:
             db[key] = value
 
-    def getClientInformation(self):
-        if hasattr(self, "client_information"):
-            return self.client_information
+    def getMetaData(self):
+        if hasattr(self, "metadata"):
+            return self.metadata
+        else:
+            return {}
+
+    def getMethodClientInformation(self, method):
+        if hasattr(method, "client_information"):
+            return method.client_information
         else:
             return {}
 
@@ -63,8 +69,6 @@ class ExampleOnOffSwitch(SwitchClass):
         return self.state
 
 class LightSwitch(SwitchClass):
-    def getClientInformation(self):
-        return {"location":self.location}
 
     @publicMethod
     def on(self):

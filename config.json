@@ -3,15 +3,21 @@
 	"switches": {
 		"hauptraum/decke_rechts": {
 			"class": "LightSwitch",
-			"location": "Decke Rechts"
+			"metadata": {
+				"location": "Decke Rechts"
+			}
 		},
 		"hauptraum/decke_links": {
 			"class": "LightSwitch",
-			"location": "Decke Links"
+			"metadata": {
+				"location": "Decke Links"
+			}
 		},
 		"hauptraum/halogen_fenster": {
 			"class": "LightSwitch",
-			"location": "Halogen Fenster"
+			"metadata": {
+				"location": "Halogen Fenster"
+			}
 		}
 	}
 }

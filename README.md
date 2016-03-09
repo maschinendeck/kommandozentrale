@@ -3,7 +3,7 @@ Das hier wird die Steuereinheit des Maschinendecks!
 
 ## Extending
 
-To add new switches to your kommandozentrale, simply add a new one to `config.json`. Every switch in config.json (attribute `switches`) needs to have at least a `class`-attribute, telling it which of `switch_classes.py`s classes is uses. This and all other attributes, for example GPIO-Pins etc, get passed to the class as `initial_data`. If your switch doesn't match the ones already defined in `switch_classes.py`, you can easily add one. Each switch must:
+To add new switches to your kommandozentrale, simply add a new one to `config.json`. Every switch in config.json (attribute `switches`) needs to have at least a `class`-attribute, telling it which of `switch_classes.py`s classes is uses. This and all other attributes, for example GPIO-Pins etc, get passed to the class as `initial_data`. The `metadata` attribute of every switch gets passed to the client. If your switch doesn't match the ones already defined in `switch_classes.py`, you can easily add one. Each switch must:
 
 - have an `__init__` function, which accepts the argument `initial_data` and any keyword arguments.
 - have a `getModules` function, returning a list of tuples of all functions which should be advertised to the clients and a dict of information for the client

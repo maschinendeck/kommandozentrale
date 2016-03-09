@@ -58,7 +58,8 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         for switch, data in self.config["switches"].items():
             switch_class = self.getSwitch(switch)
             methods = switch_class.getMethods()
-            client_config[switch] = {"methods":methods}
+            metadata = switch_class.getMetaData()
+            client_config[switch] = {"methods":methods, "metadata":metadata}
         return client_config
 
     def callMethod(self, req):
@@ -99,7 +100,8 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
             elif req["action"] == "get_state":
                 switch = self.getSwitch(req['switch'])
                 state = switch.getState()
-                res = {"result":"state", "switch":req["switch"], "state":state}
+                metadata = switch.getMetaData()
+                res = {"result":"state", "switch":req["switch"], "state":state, "metadata":metadata}
                 self.sendMessage(json.dumps(res).encode("utf8"))
 
             else:
