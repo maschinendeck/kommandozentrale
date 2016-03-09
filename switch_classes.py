@@ -2,7 +2,6 @@ import shelve
 from decorators import publicMethod
 class SwitchClass():
     state = None
-    methods = []
 
     def __init__(self, initial_data={}, **kwargs):
         initial_data.update(kwargs)
@@ -12,11 +11,7 @@ class SwitchClass():
 
     def loadState(self):
         # get state from cache
-        state = None
-
-        with shelve.open('kommandozentrale.db') as db:
-            if self.name in db:
-                state = db[self.name]
+        state = self.getFromDatabase(self.name)
 
         if state == None:
             self.setState(False)
@@ -27,8 +22,7 @@ class SwitchClass():
         return self.state
 
     def setState(self, state):
-        with shelve.open('kommandozentrale.db') as db:
-            db[self.name] = state
+        self.saveToDatabase(self.name, state)
         self.state = state
 
     def getMethods(self):
@@ -41,6 +35,17 @@ class SwitchClass():
                 else:
                     methods.append((method_name,{}))
         return methods
+
+    def getFromDatabase(self, key, file="kommandozentrale.db", default=None):
+        with shelve.open(file) as db:
+            if key in db:
+                return db[key]
+            else:
+                return default
+
+    def saveToDatabase(self, key, value, file="kommandozentrale.db"):
+        with shelve.open(file) as db:
+            db[key] = value
 
 class ExampleOnOffSwitch(SwitchClass):
     @publicMethod
