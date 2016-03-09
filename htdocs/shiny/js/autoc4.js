@@ -26,6 +26,7 @@ window.onload = function() {
     }
     socket.onclose = function(e) {
        console.log("Connection closed.");
+       $(".lightswitch-pane").append("No Connection to backend!");
        socket = null;
        isopen = false;
     }
