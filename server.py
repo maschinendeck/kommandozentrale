@@ -57,13 +57,14 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         client_config = {}
         for switch, data in self.config["switches"].items():
             switch_class = self.getSwitch(switch)
-            client_config[switch] = {"methods":switch_class.methods}
+            methods = switch_class.getMethods()
+            client_config[switch] = {"methods":methods}
         return client_config
 
     def callMethod(self, req):
         switch = self.getSwitch(req['switch'])
-        if req['method'] in switch.methods:
-            method = getattr(switch, req['method'])
+        method = getattr(switch, req['method'])
+        if hasattr(method, "is_public") and method.is_public:
             if "data" in req:
                 method(req["data"])
             else:

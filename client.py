@@ -18,6 +18,9 @@ class KommandozentraleClientProtocol(WebSocketClientProtocol):
         self.sendMessage(json.dumps(x).encode('utf8'))
         x = {"action":"get_state", "switch":"exampleSwitch"}
         self.sendMessage(json.dumps(x).encode('utf8'))
+        """while True:
+            dat = input("MSG: ")
+            self.sendMessage(dat.encode('utf8'))"""
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
