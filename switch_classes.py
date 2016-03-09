@@ -31,7 +31,7 @@ class SwitchClass():
             method = getattr(self, method_name)
             if hasattr(method, "is_public") and method.is_public:
                 client_information = self.getClientInformation()
-                methods.append((method_name,method.client_information))
+                methods.append((method_name,client_information))
         return methods
 
     def getFromDatabase(self, key, file="kommandozentrale.db", default=None):
@@ -46,8 +46,8 @@ class SwitchClass():
             db[key] = value
 
     def getClientInformation(self):
-        if hasattr(method, "client_information"):
-            return method.client_information
+        if hasattr(self, "client_information"):
+            return self.client_information
         else:
             return {}
 
