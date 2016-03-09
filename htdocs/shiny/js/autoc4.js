@@ -7,6 +7,7 @@ window.onload = function() {
     socket.onopen = function() {
        console.log("Connected!");
        isopen = true;
+       initLights();
     }
     socket.onmessage = function(e) {
         console.log("Text message received: " + e.data);
