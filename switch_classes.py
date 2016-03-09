@@ -46,10 +46,12 @@ class SwitchClass():
             db[key] = value
 
     def getMetaData(self):
+        metadata = {}
         if hasattr(self, "metadata"):
-            return self.metadata
-        else:
-            return {}
+            metadata = self.metadata
+        if hasattr(self, "class_metadata"):
+            metadata.update(self.class_metadata)
+        return metadata
 
     def getMethodClientInformation(self, method):
         if hasattr(method, "client_information"):
@@ -58,6 +60,7 @@ class SwitchClass():
             return {}
 
 class ExampleOnOffSwitch(SwitchClass):
+    class_metadata = {"type":"bool"}
     @publicMethod
     def on(self):
         self.setState(True)
@@ -69,7 +72,7 @@ class ExampleOnOffSwitch(SwitchClass):
         return self.state
 
 class LightSwitch(SwitchClass):
-
+    class_metadata = {"type":"bool"}
     @publicMethod
     def on(self):
         self.setState(True)

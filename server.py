@@ -59,7 +59,8 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
             switch_class = self.getSwitch(switch)
             methods = switch_class.getMethods()
             metadata = switch_class.getMetaData()
-            client_config[switch] = {"methods":methods, "metadata":metadata}
+            state = switch_class.getState()
+            client_config[switch] = {"methods":methods, "metadata":metadata, "state":state}
         return client_config
 
     def callMethod(self, req):
