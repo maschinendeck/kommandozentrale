@@ -20,7 +20,7 @@ app.controller('MainController', ['$scope', function ($scope) {
             var result = JSON.parse(e.data);
 
             if(result["result"] == "state") {
-                on_light_message(result["switch"], result["state"]);
+                onState(result["switch"], result["state"]);
             }
 
             if(result["result"] == "config") {
@@ -39,7 +39,13 @@ app.controller('MainController', ['$scope', function ($scope) {
         light = angular.element(event.target);
         switch_light(event.target.getAttribute("data-topic"), !light.hasClass("on"));
     };
-
+    function onState(switchname, state) {
+        if ($scope.config[switchname].metadata.type == "bool") {
+            on_light_message(switchname, state);
+        } else {
+            console.log("Got unknown switch type");
+        }
+    }
     function on_light_message(switchname, state) {
         $scope.config[switchname].state = state;
         $scope.$apply();
