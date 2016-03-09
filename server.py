@@ -49,7 +49,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
     def getSwitch(self, name):
         switch_config = self.config['switches'][name]
         switch_class = switch_config['class']
-        initial_data = switch_config['initial_data'] if "initial_data" in switch_config else {}
+        initial_data = switch_config
         switch = getattr(self.config["switchModule"], switch_class)(initial_data=initial_data, name=name)
         return switch
 
