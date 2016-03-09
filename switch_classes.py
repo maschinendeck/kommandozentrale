@@ -38,7 +38,11 @@ class SwitchClass():
         return methods
 
 
+<<<<<<< HEAD
 class LightSwitch(SwitchClass):
+=======
+class ExampleOnOffSwitch(SwitchClass):
+>>>>>>> dc2309be361e4f4e70cb56286a4e38e9c0145600
     @publicMethod
     def on(self):
         self.setState(True)
