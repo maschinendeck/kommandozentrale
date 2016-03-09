@@ -8,7 +8,7 @@ import random
 class KommandozentraleClientProtocol(WebSocketClientProtocol):
 
     def onOpen(self):
-        x = {"action":"call_method", "switch":"exampleSwitch","method":random.choice(["on", "off"])}
+        x = {"action":"call_method", "switch":"exampleSwitch","method":random.choice(["on", "off", "getState"])}
         self.sendMessage(json.dumps(x).encode('utf8'))
         if "data" in x:
             print('{switch}: {method}({data})'.format(**x))
@@ -16,6 +16,11 @@ class KommandozentraleClientProtocol(WebSocketClientProtocol):
             print('{switch}: {method}()'.format(**x))
         x = {"action":"get_config"}
         self.sendMessage(json.dumps(x).encode('utf8'))
+        x = {"action":"get_state", "switch":"exampleSwitch"}
+        self.sendMessage(json.dumps(x).encode('utf8'))
+        """while True:
+            dat = input("MSG: ")
+            self.sendMessage(dat.encode('utf8'))"""
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
@@ -25,6 +30,10 @@ class KommandozentraleClientProtocol(WebSocketClientProtocol):
             elif res["result"] == "config":
                 print(res)
                 self.sendClose()
+            elif res["result"] == "error":
+                print("An error occured: {0}".format(res["error"]))
+            else:
+                print(res)
 
     def onClose(self, wasClean, code, reason):
         loop.stop()
