@@ -14,6 +14,7 @@ app.controller('MainController', ['$scope', function ($scope) {
         $scope.socket.onopen = function() {
             console.log("Connected!");
             $scope.isopen = true;
+            $scope.$apply();
             getConfig();
         }
         $scope.socket.onmessage = function(e) {
@@ -26,6 +27,7 @@ app.controller('MainController', ['$scope', function ($scope) {
             if(result["result"] == "config") {
                 $scope.config = result["config"];
             }
+            $scope.$apply();
         }
         $scope.socket.onclose = function(e) {
             console.log("Connection closed.");
