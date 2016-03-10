@@ -1,7 +1,7 @@
 var app = angular.module('Kommandozentrale', ["ui.bootstrap", 'ngAnimate']);
 
 app.controller('MainController', ['$scope', function ($scope) {
-    init = function() {
+    $scope.init = function() {
         $scope.page = "html/control.html"
         $scope.socket = null;
         $scope.isopen = false;
@@ -69,6 +69,6 @@ app.controller('MainController', ['$scope', function ($scope) {
         sendData(data);
     }
 
-    init();
+    $scope.init();
 
 }]);

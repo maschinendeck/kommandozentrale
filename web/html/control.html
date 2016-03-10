@@ -3,6 +3,7 @@
 		<button ng-if='value["metadata"]["type"] == "bool"' type="button" class="btn btn-light" ng-class='value["state"] ? "on" : "off"' data-topic="{{key}}" ng-click="lightClick($event)">{{value["metadata"]["location"]}}</button>
 	</div>
 	<div ng-hide="isopen">
-		Connection to Server is NOT open, please reload!
+		Connection to Server is NOT open!
+		<button type="button" class="btn" ng-click="init()">Reconnect</button>
 	</div>
 </div>
