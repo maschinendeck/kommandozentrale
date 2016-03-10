@@ -17,6 +17,7 @@
     margin: 2px;
 
 }
+
 .btn-light.on{
     background-color: #00ff00;
     background-image: url(../img/bulb_on.png);
