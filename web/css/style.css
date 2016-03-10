@@ -1,6 +1,8 @@
 .btn-light{
+
     width: 120px !important;
     height: 120px;
+
     background-image: url(../img/bulb_off.png);
     background-position: center top;
     background-size: 50% auto;
@@ -8,7 +10,7 @@
     -moz-background-origin: content;          /* Firefox 1.0-3.6 */
     -webkit-background-origin: content-box;   /* Safari, Chrome */
     background-origin: content-box;           /* Firefox 4.0+ */
-    
+
     line-height: 180px;
 
     color: #ffffff;
@@ -19,10 +21,14 @@
 }
 
 .btn-light.on{
+
     background-color: #00ff00;
     background-image: url(../img/bulb_on.png);
+
 }
 
 .btn-container {
-    display: inline
+
+    display: inline;
+
 }
