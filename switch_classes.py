@@ -137,5 +137,5 @@ class MPDSwitch(SwitchClass):
     @publicMethod
     def play(self):
         self.getMPDClient()
-        self.client.pause()
+        self.client.play()
         return self.getState()

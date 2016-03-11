@@ -41,6 +41,12 @@ app.controller('MainController', ['$scope', function ($scope) {
         light = angular.element(event.target);
         switch_light(event.target.getAttribute("data-topic"), !light.hasClass("on"));
     };
+    $scope.musicClick = function(event) {
+        music = angular.element(event.target.parentNode);
+        action = event.target.getAttribute("data-topic")
+        switch_name = music[0].getAttribute("data-topic")
+        callMethod(switch_name, action);
+    };
     function onState(switchname, state) {
         $scope.config[switchname].state = state;
         $scope.$apply();
