@@ -18,6 +18,12 @@
 			"metadata": {
 				"location": "Halogen Fenster"
 			}
+		},
+		"pajowu/mpd": {
+			"class": "MPDSwitch",
+			"metadata": {
+				"location": "Mucke"
+			}
 		}
 	}
 }

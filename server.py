@@ -113,8 +113,8 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
 
             except json.decoder.JSONDecodeError as e:
                 res = {"result":"error", "error":"Couldn't decode payload"}
-            except Exception:
-                res = {"result":"error", "error":""}
+            except Exception as e:
+                res = {"result":"error", "error":repr(e)}
             self.sendMessage(json.dumps(res).encode("utf8"))
 
 

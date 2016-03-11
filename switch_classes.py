@@ -1,5 +1,7 @@
 import shelve
 from decorators import publicMethod
+from mpd import MPDClient
+
 class SwitchClass():
     state = None
 
@@ -84,4 +86,56 @@ class LightSwitch(SwitchClass):
         return self.state
 
 
+class MPDSwitch(SwitchClass):
+    class_metadata = {"type":"music"}
+    client = None
 
+    def getMPDClient(self):
+        if self.client == None:
+            self.client = MPDClient()
+            self.client.connect("localhost", 6600)
+
+    def close(self):
+        self.client.close()
+        self.client.disconnect()
+
+    def getCurrentSong(self):
+        song = self.client.currentsong()
+        song_str = "{artist} - {album}: {title}".format(**song)
+        return song_str
+
+    def getState(self):
+        self.getMPDClient()
+        state = self.getCurrentSong()
+        return state
+
+    @publicMethod
+    def next(self):
+        self.getMPDClient()
+        self.client.next()
+        return self.getState()
+
+    @publicMethod
+    def stop(self):
+        self.getMPDClient()
+        self.client.stop()
+        return self.getState()
+
+
+    @publicMethod
+    def previous(self):
+        self.getMPDClient()
+        self.client.previous()
+        return self.getState()
+
+    @publicMethod
+    def pause(self):
+        self.getMPDClient()
+        self.client.pause()
+        return self.getState()
+
+    @publicMethod
+    def play(self):
+        self.getMPDClient()
+        self.client.pause()
+        return self.getState()
