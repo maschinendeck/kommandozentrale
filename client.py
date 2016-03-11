@@ -8,7 +8,9 @@ import random
 class KommandozentraleClientProtocol(WebSocketClientProtocol):
 
     def onOpen(self):
-        x = {"action":"call_method", "switch":"hauptraum/decke_rechts","method":random.choice(["on", "off", "getState"])}
+        switch = random.choice(["NonExistingSwitch", "hauptraum/decke_rechts"])
+        method = random.choice(["on", "off", "getState"])
+        x = {"action":"call_method", "switch":switch,"method":method}
         self.sendMessage(json.dumps(x).encode('utf8'))
         if "data" in x:
             print('{switch}: {method}({data})'.format(**x))
@@ -16,11 +18,8 @@ class KommandozentraleClientProtocol(WebSocketClientProtocol):
             print('{switch}: {method}()'.format(**x))
         x = {"action":"get_config"}
         self.sendMessage(json.dumps(x).encode('utf8'))
-        x = {"action":"get_state", "switch":"hauptraum/decke_rechts"}
+        x = {"action":"get_state", "switch":switch}
         self.sendMessage(json.dumps(x).encode('utf8'))
-        """while True:
-            dat = input("MSG: ")
-            self.sendMessage(dat.encode('utf8'))"""
 
     def onMessage(self, payload, isBinary):
         if not isBinary:
