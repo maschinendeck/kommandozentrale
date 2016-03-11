@@ -84,35 +84,34 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, isBinary):
         """ Handle messages """
         if not isBinary:
-            req = json.loads(payload.decode('utf8'))
+            try:
+                req = json.loads(payload.decode('utf8'))
+                if req["action"] == "call_method":
+                    try:
+                        state = self.callMethod(req)
+                        res = {"result":"state", "switch":req["switch"], "state":state}
+                        self.factory.broadcast(res)
+                    except (NotAllowedException, NotFoundException) as e:
+                        error = str(e)
+                        res = {"result":"error", "error":error}
 
-            if req["action"] == "call_method":
-                try:
-                    state = self.callMethod(req)
-                    res = {"result":"state", "switch":req["switch"], "state":state}
-                    self.factory.broadcast(res)
-                except (NotAllowedException, NotFoundException) as e:
-                    error = str(e)
-                    res = {"result":"error", "error":error}
-                self.sendMessage(json.dumps(res).encode("utf8"))
+                elif req["action"] == "get_config":
+                    client_config = self.getClientConfig()
+                    res = {"result":"config", "config":client_config}
 
-            elif req["action"] == "get_config":
-                # TODO: send better config
-                client_config = self.getClientConfig()
-                msg = {"result":"config", "config":client_config}
-                self.sendMessage(json.dumps(msg).encode("utf8"))
+                elif req["action"] == "get_state":
+                    switch = self.getSwitch(req['switch'])
+                    state = switch.getState()
+                    metadata = switch.getMetaData()
+                    res = {"result":"state", "switch":req["switch"], "state":state, "metadata":metadata}
 
-            elif req["action"] == "get_state":
-                switch = self.getSwitch(req['switch'])
-                state = switch.getState()
-                metadata = switch.getMetaData()
-                res = {"result":"state", "switch":req["switch"], "state":state, "metadata":metadata}
-                self.sendMessage(json.dumps(res).encode("utf8"))
+                else:
+                    res = {"result":"error", "error":"Action not found"}
 
-            else:
-                msg = {"result":"error", "error":"Action not found"}
-                self.sendMessage(json.dumps(msg).encode("utf8"))
 
+            except json.decoder.JSONDecodeError as e:
+                res = {"result":"error", "error":"Couldn't decode payload"}
+            self.sendMessage(json.dumps(res).encode("utf8"))
 
 
 
