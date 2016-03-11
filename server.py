@@ -86,28 +86,30 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         if not isBinary:
             try:
                 req = json.loads(payload.decode('utf8'))
-                if req["action"] == "call_method":
-                    try:
-                        state = self.callMethod(req)
-                        res = {"result":"state", "switch":req["switch"], "state":state}
-                        self.factory.broadcast(res)
-                    except (NotAllowedException, NotFoundException) as e:
-                        error = str(e)
-                        res = {"result":"error", "error":error}
+                if isinstance(req, dict):
+                    if req["action"] == "call_method":
+                        try:
+                            state = self.callMethod(req)
+                            res = {"result":"state", "switch":req["switch"], "state":state}
+                            self.factory.broadcast(res)
+                        except (NotAllowedException, NotFoundException) as e:
+                            error = str(e)
+                            res = {"result":"error", "error":error}
 
-                elif req["action"] == "get_config":
-                    client_config = self.getClientConfig()
-                    res = {"result":"config", "config":client_config}
+                    elif req["action"] == "get_config":
+                        client_config = self.getClientConfig()
+                        res = {"result":"config", "config":client_config}
 
-                elif req["action"] == "get_state":
-                    switch = self.getSwitch(req['switch'])
-                    state = switch.getState()
-                    metadata = switch.getMetaData()
-                    res = {"result":"state", "switch":req["switch"], "state":state, "metadata":metadata}
+                    elif req["action"] == "get_state":
+                        switch = self.getSwitch(req['switch'])
+                        state = switch.getState()
+                        metadata = switch.getMetaData()
+                        res = {"result":"state", "switch":req["switch"], "state":state, "metadata":metadata}
 
+                    else:
+                        res = {"result":"error", "error":"Action not found"}
                 else:
-                    res = {"result":"error", "error":"Action not found"}
-
+                    res = {"result":"error", "error":"Decoded payload is no dict"}
 
             except json.decoder.JSONDecodeError as e:
                 res = {"result":"error", "error":"Couldn't decode payload"}
