@@ -10,7 +10,6 @@ from exceptions import NotAllowedException, NotFoundException
 class KommandozentraleServerFactory(WebSocketServerFactory):
     config = {"switchModule":"switch_classes","switches": {}}
     def __init__(self, url, config="config.json"):
-        print("INIT")
         WebSocketServerFactory.__init__(self, url)
         self.clients = []
         with open(config) as configfile:
@@ -88,7 +87,6 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
     def onMessage(self, payload, isBinary):
         """ Handle messages """
         if not isBinary:
-            print(payload)
             res = None
             try:
                 req = json.loads(payload.decode('utf8'))

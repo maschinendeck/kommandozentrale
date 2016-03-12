@@ -99,11 +99,16 @@ class MPDSwitch(SwitchClass):
         if self.client == None:
             self.client = MPDClient()
             self.client.connect("localhost", 6600)
-
+        else:
+            try:
+                self.client.ping()
+            except ConnectionError as e:
+                self.client = None
+                self.getMPDClient()
 
     def poll(self):
-        """ function calls itself every second to check for config changes """
-        self.client.ping()
+        """ This function calls itself every second to check for config changes """
+        self.getMPDClient()
         state = self.getState()
         if self.state != state:
             self.state = state
@@ -113,6 +118,7 @@ class MPDSwitch(SwitchClass):
             self.factory.broadcast(res)
 
         self.factory.loop.call_later(1, self.poll)
+
 
     def close(self):
         self.client.close()
