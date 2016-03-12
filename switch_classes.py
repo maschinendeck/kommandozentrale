@@ -61,18 +61,6 @@ class SwitchClass():
         else:
             return {}
 
-class ExampleOnOffSwitch(SwitchClass):
-    class_metadata = {"type":"bool"}
-    @publicMethod
-    def on(self):
-        self.setState(True)
-        return self.state
-
-    @publicMethod
-    def off(self):
-        self.setState(False)
-        return self.state
-
 class LightSwitch(SwitchClass):
     class_metadata = {"type":"bool"}
     @publicMethod
@@ -84,7 +72,6 @@ class LightSwitch(SwitchClass):
     def off(self):
         self.setState(False)
         return self.state
-
 
 class MPDSwitch(SwitchClass):
     class_metadata = {"type":"music"}
@@ -126,7 +113,10 @@ class MPDSwitch(SwitchClass):
 
     def getCurrentSong(self):
         song = self.client.currentsong()
-        song_str = "{artist} - {album}: {title}".format(**song)
+        if "artist" in sond and "album" in song an "title" in song:
+            song_str = "{artist} - {album}: {title}".format(**song)
+        else:
+            song_str = "No song selected"
         return song_str
 
     def getState(self):
