@@ -1,6 +1,6 @@
 import shelve
 from decorators import publicMethod
-from mpd import MPDClient
+from mpd import MPDClient, ConnectionError
 
 class SwitchClass():
     state = None
