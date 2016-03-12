@@ -46,7 +46,9 @@ app.controller('MainController', ['$scope', function ($scope) {
         action = event.target.getAttribute("data-topic")
         switch_name = music[0].getAttribute("data-topic")
         callMethod(switch_name, action);
+
     };
+
     function onState(switchname, state) {
         $scope.config[switchname].state = state;
         $scope.$apply();

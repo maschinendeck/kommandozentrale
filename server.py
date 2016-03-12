@@ -8,10 +8,21 @@ from autobahn.asyncio.websocket import WebSocketServerProtocol, \
 from exceptions import NotAllowedException, NotFoundException
 
 class KommandozentraleServerFactory(WebSocketServerFactory):
-
-    def __init__(self, url):
+    config = {"switchModule":"switch_classes","switches": {}}
+    def __init__(self, url, config="config.json"):
+        print("INIT")
         WebSocketServerFactory.__init__(self, url)
         self.clients = []
+        with open(config) as configfile:
+            self.config.update(json.load(configfile))
+        self.config['switchModule'] = importlib.import_module(self.config['switchModule'])
+        for name in self.config["switches"]:
+            switch_config = self.config['switches'][name]
+            switch_class = switch_config['class']
+            initial_data = switch_config
+            switch = getattr(self.config["switchModule"], switch_class)(initial_data=initial_data, name=name, factory=self)
+            self.config['switches'][name]['class'] = switch
+
 
     def register(self, client):
         if client not in self.clients:
@@ -28,16 +39,15 @@ class KommandozentraleServerFactory(WebSocketServerFactory):
         for c in self.clients:
             c.sendMessage(msg)
 
+    def getSwitch(self, name):
+        if name in self.config['switches']:
+            switch_config = self.config['switches'][name]
+            switch_class = switch_config['class']
+            return switch_class
+        else:
+            raise NotFoundException("Switch with name {0} not found".format(name))
 
 class KommandozentraleServerProtocol(WebSocketServerProtocol):
-    config = {"switchModule":"switch_classes","switches": {}}
-
-
-    def __init__(self, config="config.json"):
-        super().__init__()
-        with open(config) as configfile:
-            self.config.update(json.load(configfile))
-        self.config['switchModule'] = importlib.import_module(self.config['switchModule'])
 
     def onOpen(self):
         self.factory.register(self)
@@ -46,21 +56,10 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         WebSocketServerProtocol.onClose(self, *args, **kwargs)
         self.factory.unregister(self)
 
-
-    def getSwitch(self, name):
-        if name in self.config['switches']:
-            switch_config = self.config['switches'][name]
-            switch_class = switch_config['class']
-            initial_data = switch_config
-            switch = getattr(self.config["switchModule"], switch_class)(initial_data=initial_data, name=name)
-            return switch
-        else:
-            raise NotFoundException("Switch with name {0} not found".format(name))
-
     def getClientConfig(self):
         client_config = {}
-        for switch, data in self.config["switches"].items():
-            switch_class = self.getSwitch(switch)
+        for switch, data in self.factory.config["switches"].items():
+            switch_class = self.factory.getSwitch(switch)
             methods = switch_class.getMethods()
             metadata = switch_class.getMetaData()
             state = switch_class.getState()
@@ -68,7 +67,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         return client_config
 
     def callMethod(self, req):
-        switch = self.getSwitch(req['switch'])
+        switch = self.factory.getSwitch(req['switch'])
         method = getattr(switch, req['method'])
         if hasattr(method, "is_public") and method.is_public:
             if "data" in req:
@@ -79,19 +78,26 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         else:
             raise NotAllowedException('Method "{0}" of switch "{1}" is not public'.format(req['method'], req['switch']))
 
+    def getState(self, switch_name):
+        switch = self.factory.getSwitch(switch_name)
+        state = switch.getState()
+        metadata = switch.getMetaData()
+        res = {"result":"state", "switch":switch_name, "state":state, "metadata":metadata}
 
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):
         """ Handle messages """
         if not isBinary:
+            print(payload)
+            res = None
             try:
                 req = json.loads(payload.decode('utf8'))
                 if isinstance(req, dict):
                     if req["action"] == "call_method":
                         try:
                             state = self.callMethod(req)
-                            res = {"result":"state", "switch":req["switch"], "state":state}
-                            self.factory.broadcast(res)
+                            new_state = self.getState(req["switch"])
+                            self.factory.broadcast(new_state)
                         except (NotAllowedException, NotFoundException) as e:
                             error = str(e)
                             res = {"result":"error", "error":error}
@@ -101,10 +107,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                         res = {"result":"config", "config":client_config}
 
                     elif req["action"] == "get_state":
-                        switch = self.getSwitch(req['switch'])
-                        state = switch.getState()
-                        metadata = switch.getMetaData()
-                        res = {"result":"state", "switch":req["switch"], "state":state, "metadata":metadata}
+                        res = self.getState(req["switch"])
 
                     else:
                         res = {"result":"error", "error":"Action not found"}
@@ -115,7 +118,8 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                 res = {"result":"error", "error":"Couldn't decode payload"}
             except Exception as e:
                 res = {"result":"error", "error":repr(e)}
-            self.sendMessage(json.dumps(res).encode("utf8"))
+            if res != None:
+                self.sendMessage(json.dumps(res).encode("utf8"))
 
 
 

@@ -89,11 +89,30 @@ class LightSwitch(SwitchClass):
 class MPDSwitch(SwitchClass):
     class_metadata = {"type":"music"}
     client = None
+    state = None
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.getMPDClient()
+        self.poll()
 
     def getMPDClient(self):
         if self.client == None:
             self.client = MPDClient()
             self.client.connect("localhost", 6600)
+
+
+    def poll(self):
+        """ function calls itself every second to check for config changes """
+        self.client.ping()
+        state = self.getState()
+        if self.state != state:
+            self.state = state
+            state = self.getState()
+            metadata = self.getMetaData()
+            res = {"result":"state", "switch":self.name, "state":state, "metadata":metadata}
+            self.factory.broadcast(res)
+
+        self.factory.loop.call_later(1, self.poll)
 
     def close(self):
         self.client.close()
