@@ -113,7 +113,7 @@ class MPDSwitch(SwitchClass):
 
     def getCurrentSong(self):
         song = self.client.currentsong()
-        if "artist" in sond and "album" in song an "title" in song:
+        if "artist" in song and "album" in song and "title" in song:
             song_str = "{artist} - {album}: {title}".format(**song)
         else:
             song_str = "No song selected"
