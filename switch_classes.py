@@ -95,6 +95,7 @@ class MPDSwitch(SwitchClass):
 
     def poll(self):
         """ This function calls itself every second to check for config changes """
+
         self.getMPDClient()
         state = self.getState(status=False)
         if self.state != state:
@@ -102,7 +103,6 @@ class MPDSwitch(SwitchClass):
             state = self.getState()
             metadata = self.getMetaData()
             res = {"result":"state", "switch":self.name, "state":state, "metadata":metadata}
-            print(res)
             self.factory.broadcast(res)
         self.factory.loop.call_later(1, self.poll)
 

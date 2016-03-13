@@ -9,8 +9,8 @@ from exceptions import NotAllowedException, NotFoundException
 
 class KommandozentraleServerFactory(WebSocketServerFactory):
     config = {"switchModule":"switch_classes","switches": {}}
-    def __init__(self, url, config="config.json"):
-        WebSocketServerFactory.__init__(self, url)
+    def __init__(self, url, config="config.json", *args, **kwargs):
+        WebSocketServerFactory.__init__(self, url, *args, **kwargs)
         self.clients = []
         with open(config) as configfile:
             self.config.update(json.load(configfile))

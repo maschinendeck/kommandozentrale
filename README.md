@@ -2,8 +2,8 @@
 Das hier wird die Steuereinheit des Maschinendecks!
 
 ## Installation
- `TODO` List dependencys
 
+The server currently only runs on Python 3. To install all dependencies, simply do `pip install -r requirements.txt`.
 
 ## Start it
 
