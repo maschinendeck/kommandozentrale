@@ -21,6 +21,8 @@ app.controller('MainController', ['$scope', function ($scope) {
         $scope.socket.onmessage = function(e) {
             var result = JSON.parse(e.data);
 
+            console.log(e.data);
+
             if(result["result"] === "state") {
                 onState(result["switch"], result["state"]);
             }
@@ -28,6 +30,7 @@ app.controller('MainController', ['$scope', function ($scope) {
             if(result["result"] === "config") {
                 $scope.config = result["config"];
             }
+
             $scope.$apply();
         }
         $scope.socket.onclose = function(e) {

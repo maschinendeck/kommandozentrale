@@ -27,8 +27,11 @@
 
 }
 
-.btn-container {
+.control-container {
+    padding: 5px;
+}
 
+.btn-container {
     display: inline;
 
 }

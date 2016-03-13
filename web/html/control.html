@@ -1,11 +1,11 @@
 <div id="control">
 
-	<div ng-show="isopen" class="btn-container">
+
+	<div ng-show="isopen" class="control-container btn-container">
 		<button ng-repeat="(key, value) in config" ng-if='value["metadata"]["type"] == "bool"' type="button" class="btn btn-light" ng-class='value["state"] ? "on" : "off"' data-topic="{{key}}" ng-click="lightClick($event)">{{value["metadata"]["location"]}}</button>
-		<hr />
 	</div>
 
-	<div ng-show="isopen" ng-repeat="(key, value) in config" class="music-container">
+	<div ng-show="isopen" ng-repeat="(key, value) in config" class="control-container music-container">
 
 		<div class="btn-toolbar" role="toolbar">
 			<div class="btn-group music-control" ng-if='value["metadata"]["type"] == "music"' data-topic="{{key}}">
@@ -21,7 +21,7 @@
 			</div>
 		</div>
 	</div>
-
+	
 	<div ng-hide="isopen">
 		Connection to Server is NOT open!
 		<button type="button" class="btn" ng-click="init()">Reconnect</button>
