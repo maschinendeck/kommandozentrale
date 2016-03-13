@@ -14,8 +14,7 @@ Das hier wird die Steuereinheit des Maschinendecks!
 
 
 ### Webserver
-You need to serve the `web` folder. You can do this with the Simple Python HTTPServer. CD to `web` and run the following command:
-`python -m http.server 8080`
+You need to serve the `web` folder. You can do this with the Simple Python HTTPServer. `cd` to `web` and run the following command: `python -m http.server 8080`.
 Now you can visit the Control Panel on `http://localhost:8080/`
 
 
