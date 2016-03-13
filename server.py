@@ -1,7 +1,7 @@
 import asyncio
 import json
 import importlib
-
+import copy
 from autobahn.asyncio.websocket import WebSocketServerProtocol, \
     WebSocketServerFactory
 
@@ -70,10 +70,9 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         method = getattr(switch, req['method'])
         if hasattr(method, "is_public") and method.is_public:
             if "data" in req:
-                method(req["data"])
+                return method(req["data"])
             else:
-                method()
-            return switch.getState()
+                return method()
         else:
             raise NotAllowedException('Method "{0}" of switch "{1}" is not public'.format(req['method'], req['switch']))
 
@@ -82,7 +81,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         state = switch.getState()
         metadata = switch.getMetaData()
         res = {"result":"state", "switch":switch_name, "state":state, "metadata":metadata}
-
+        return res
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):
         """ Handle messages """
@@ -95,6 +94,11 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                         try:
                             state = self.callMethod(req)
                             new_state = self.getState(req["switch"])
+                            res = copy.copy(new_state)
+                            res["return_value"] = state
+                            res["methods"] = req["method"]
+                            res["result"] = "return_method"
+
                             self.factory.broadcast(new_state)
                         except (NotAllowedException, NotFoundException) as e:
                             error = str(e)
@@ -116,7 +120,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                 res = {"result":"error", "error":"Couldn't decode payload"}
             except Exception as e:
                 res = {"result":"error", "error":repr(e)}
-            if res != None:
+            if res:
                 self.sendMessage(json.dumps(res).encode("utf8"))
 
 

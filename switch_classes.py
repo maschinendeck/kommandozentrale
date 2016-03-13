@@ -112,7 +112,9 @@ class MPDSwitch(SwitchClass):
         self.client.disconnect()
 
     def getCurrentSong(self):
-        song = self.client.currentsong()
+        song = self.parseSong(self.client.currentsong())
+        return song
+    def parseSong(self, song):
         if "artist" in song and "album" in song and "title" in song:
             song_str = "{artist} - {album}: {title}".format(**song)
         else:
@@ -124,33 +126,43 @@ class MPDSwitch(SwitchClass):
         state = self.getCurrentSong()
         return state
 
+    def getPlaylist(self):
+        playlist = self.client.playlistid()
+        parsed_playlist = [self.parseSong(song) for song in playlist]
+        print(parsed_playlist)
+        return parsed_playlist
+
+    @publicMethod
+    def get_playlist(self):
+        return self.getPlaylist()
+
     @publicMethod
     def next(self):
         self.getMPDClient()
         self.client.next()
-        return self.getState()
+        return True
 
     @publicMethod
     def stop(self):
         self.getMPDClient()
         self.client.stop()
-        return self.getState()
+        return True
 
 
     @publicMethod
     def previous(self):
         self.getMPDClient()
         self.client.previous()
-        return self.getState()
+        return True
 
     @publicMethod
     def pause(self):
         self.getMPDClient()
         self.client.pause()
-        return self.getState()
+        return True
 
     @publicMethod
     def play(self):
         self.getMPDClient()
         self.client.play()
-        return self.getState()
+        return True
