@@ -82,7 +82,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         state = switch.getState()
         metadata = switch.getMetaData()
         res = {"result":"state", "switch":switch_name, "state":state, "metadata":metadata}
-
+        return res
     @asyncio.coroutine
     def onMessage(self, payload, isBinary):
         """ Handle messages """
@@ -116,7 +116,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                 res = {"result":"error", "error":"Couldn't decode payload"}
             except Exception as e:
                 res = {"result":"error", "error":repr(e)}
-            if res != None:
+            if res:
                 self.sendMessage(json.dumps(res).encode("utf8"))
 
 
