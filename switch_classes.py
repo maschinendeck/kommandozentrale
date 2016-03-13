@@ -76,7 +76,7 @@ class LightSwitch(SwitchClass):
 class MPDSwitch(SwitchClass):
     class_metadata = {"type":"music"}
     client = None
-    state = None
+    state = {}
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.getMPDClient()
@@ -96,14 +96,13 @@ class MPDSwitch(SwitchClass):
     def poll(self):
         """ This function calls itself every second to check for config changes """
         self.getMPDClient()
-        state = self.getState()
+        state = self.getState(status=False)
         if self.state != state:
             self.state = state
             state = self.getState()
             metadata = self.getMetaData()
             res = {"result":"state", "switch":self.name, "state":state, "metadata":metadata}
             self.factory.broadcast(res)
-
         self.factory.loop.call_later(1, self.poll)
 
 
@@ -121,16 +120,24 @@ class MPDSwitch(SwitchClass):
             song_str = "No song selected"
         return song_str
 
-    def getState(self):
+    def getState(self, song=True, playlist=True, status=True):
         self.getMPDClient()
-        state = self.getCurrentSong()
+        state = {}
+        if song: state["song"] = self.getCurrentSong()
+        if playlist: state["playlist"] = self.getPlaylist()
+        if status: state["status"] = self.getStatus()
         return state
 
     def getPlaylist(self):
+        self.getMPDClient()
         playlist = self.client.playlistid()
         parsed_playlist = [self.parseSong(song) for song in playlist]
-        print(parsed_playlist)
         return parsed_playlist
+
+    def getStatus(self):
+        self.getMPDClient()
+        status = self.client.status()
+        return status
 
     @publicMethod
     def get_playlist(self):
