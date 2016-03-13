@@ -169,7 +169,10 @@ class MPDSwitch(SwitchClass):
         return True
 
     @publicMethod
-    def play(self):
+    def play(self, data=None):
         self.getMPDClient()
-        self.client.play()
+        if data and "id" in data:
+            self.client.playid(data["id"])
+        else:
+            self.client.play()
         return True

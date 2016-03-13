@@ -73,8 +73,8 @@ app.controller('MainController', ['$scope', function ($scope) {
         }
     }
 
-    function callMethod(data_switch, data_method) {
-        data = {"action":"call_method", "switch":data_switch, "method":data_method};
+    function callMethod(data_switch, data_method, data) {
+        data = {"action":"call_method", "switch":data_switch, "method":data_method, "data":data};
         sendData(data);
     }
 
