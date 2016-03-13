@@ -10,20 +10,14 @@
 		<div class="btn-toolbar" role="toolbar">
 			<div class="btn-group music-control" ng-if='value["metadata"]["type"] == "music"' data-topic="{{key}}">
 				<button type="button" class="btn btn-default" aria-label="Current Track">
-					Currently Playing: {{value["state"]}}
+					Currently Playing: {{value["state"]["song"]}}
 				</button>
-				<button type="button" class="btn btn-default" aria-label="PAUSE" data-topic="pause" ng-click="musicClick($event)">
-					<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+				<button type="button" class="btn btn-default" ng-repeat="btn in musicBtn"
+					ng-class='{active: value["state"]["status"]["state"]==btn[0]}'
+					data-topic="{{btn[0]}}" ng-click="musicClick($event)" aria-label="{{btn[0]}}">
+					<span class="glyphicon glyphicon-{{btn[1]}}" aria-hidden="true"></span>
 				</button>
-				<button type="button" class="btn btn-default" aria-label="PLAY" data-topic="play" ng-click="musicClick($event)">
-					<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
-				</button>
-				<button class="btn btn-default" aria-label="PREVIOUS" data-topic="previous" ng-click="musicClick($event)">
-					<span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
-				</button>
-				<button type="button" class="btn btn-default" aria-label="NEXT" data-topic="next" ng-click="musicClick($event)">
-					<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
-				</button>
+				Playlist: {{value["state"]["playlist"]}}
 			</div>
 		</div>
 	</div>

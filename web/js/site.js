@@ -5,6 +5,7 @@ app.controller('MainController', ['$scope', function ($scope) {
         $scope.page = "html/control.html"
         $scope.socket = null;
         $scope.isopen = false;
+        $scope.musicBtn = [["play","play"], ["pause","pause"], ["previous","backward"], ["next","forward"]]
         initSocket();
     }
 
