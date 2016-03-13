@@ -1,0 +1,4 @@
+autobahn==0.10.9
+python-mpd2==0.5.5
+six==1.10.0
+txaio==2.1.0
