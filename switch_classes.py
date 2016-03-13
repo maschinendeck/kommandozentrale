@@ -128,29 +128,29 @@ class MPDSwitch(SwitchClass):
     def next(self):
         self.getMPDClient()
         self.client.next()
-        return self.getState()
+        return True
 
     @publicMethod
     def stop(self):
         self.getMPDClient()
         self.client.stop()
-        return self.getState()
+        return True
 
 
     @publicMethod
     def previous(self):
         self.getMPDClient()
         self.client.previous()
-        return self.getState()
+        return True
 
     @publicMethod
     def pause(self):
         self.getMPDClient()
         self.client.pause()
-        return self.getState()
+        return True
 
     @publicMethod
     def play(self):
         self.getMPDClient()
         self.client.play()
-        return self.getState()
+        return True

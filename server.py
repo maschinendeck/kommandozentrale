@@ -70,10 +70,9 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
         method = getattr(switch, req['method'])
         if hasattr(method, "is_public") and method.is_public:
             if "data" in req:
-                method(req["data"])
+                return method(req["data"])
             else:
-                method()
-            return switch.getState()
+                return method()
         else:
             raise NotAllowedException('Method "{0}" of switch "{1}" is not public'.format(req['method'], req['switch']))
 
@@ -95,6 +94,7 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                         try:
                             state = self.callMethod(req)
                             new_state = self.getState(req["switch"])
+                            new_state["return_value"] = state
                             self.factory.broadcast(new_state)
                         except (NotAllowedException, NotFoundException) as e:
                             error = str(e)
