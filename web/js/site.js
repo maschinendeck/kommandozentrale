@@ -29,6 +29,7 @@ app.controller('MainController', ['$scope', function ($scope) {
             if(result["result"] === "config") {
                 $scope.config = result["config"];
             }
+
             $scope.$apply();
         }
         $scope.socket.onclose = function(e) {

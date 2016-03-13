@@ -117,7 +117,6 @@ class MPDSwitch(SwitchClass):
         return song
 
     def parseSong(self, song):
-        print(song)
         if "artist" in song and "album" in song and "title" in song:
             song_str = "{artist} - {album}: {title}".format(**song)
         elif "title" in song:

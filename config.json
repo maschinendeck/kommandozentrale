@@ -16,7 +16,7 @@
 		"hauptraum/halogen_fenster": {
 			"class": "LightSwitch",
 			"metadata": {
-				"location": "Halogen Fenster"
+				"location": "Fenster"
 			}
 		},
 		"pajowu/mpd": {
