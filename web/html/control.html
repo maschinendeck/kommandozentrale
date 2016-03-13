@@ -3,15 +3,29 @@
 	<div ng-show="isopen" ng-repeat="(key, value) in config" class="btn-container">
 		<button ng-if='value["metadata"]["type"] == "bool"' type="button" class="btn btn-light" ng-class='value["state"] ? "on" : "off"' data-topic="{{key}}" ng-click="lightClick($event)">{{value["metadata"]["location"]}}</button>
 	</div>
+
+	<hr />
+
 	<div ng-show="isopen" ng-repeat="(key, value) in config" class="music-container">
 
-		<div ng-if='value["metadata"]["type"] == "music"' data-topic="{{key}}">
-			Currently playing: {{value["state"]}}
-			<button data-topic="pause" ng-click="musicClick($event)">PAUSE</button>
-			<button data-topic="play" ng-click="musicClick($event)">PLAY</button>
-			<button data-topic="previous" ng-click="musicClick($event)">PREVIOUS</button>
-			<button data-topic="next" ng-click="musicClick($event)">NEXT</button>
-			<button data-topic="stop" ng-click="musicClick($event)">STOP</button>
+		<div ng-if='value["metadata"]["type"] == "music"' data-topic="{{key}}" class="btn-toolbar" role="toolbar">
+			<div class="btn-group">
+				<button type="button" class="btn btn-default" aria-label="PAUSE">
+					Currently Playing: {{value["state"]}}
+				</button>
+				<button type="button" class="btn btn-default" aria-label="PAUSE">
+					<span class="glyphicon glyphicon-pause" aria-hidden="true"></span>
+				</button>
+				<button data-topic="pause" ng-click="musicClick($event)" data-topic="play" ng-click="musicClick($event)" type="button" class="btn btn-default" aria-label="PLAY">
+					<span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+				</button>
+				<button data-topic="previous" ng-click="musicClick($event)" type="button" class="btn btn-default" aria-label="PREVIOUS">
+					<span class="glyphicon glyphicon-backward" aria-hidden="true"></span>
+				</button>
+				<button data-topic="next" ng-click="musicClick($event)" type="button" class="btn btn-default" aria-label="NEXT">
+					<span class="glyphicon glyphicon-forward" aria-hidden="true"></span>
+				</button>
+			</div>
 		</div>
 	</div>
 
