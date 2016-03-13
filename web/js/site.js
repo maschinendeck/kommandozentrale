@@ -20,6 +20,8 @@ app.controller('MainController', ['$scope', function ($scope) {
         $scope.socket.onmessage = function(e) {
             var result = JSON.parse(e.data);
 
+            console.log(e.data);
+
             if(result["result"] === "state") {
                 onState(result["switch"], result["state"]);
             }

@@ -102,6 +102,7 @@ class MPDSwitch(SwitchClass):
             state = self.getState()
             metadata = self.getMetaData()
             res = {"result":"state", "switch":self.name, "state":state, "metadata":metadata}
+            print(res)
             self.factory.broadcast(res)
 
         self.factory.loop.call_later(1, self.poll)
@@ -114,9 +115,15 @@ class MPDSwitch(SwitchClass):
     def getCurrentSong(self):
         song = self.parseSong(self.client.currentsong())
         return song
+
     def parseSong(self, song):
+        print(song)
         if "artist" in song and "album" in song and "title" in song:
             song_str = "{artist} - {album}: {title}".format(**song)
+        elif "title" in song:
+            song_str = "{title}".format(**song)
+        elif "file" in song:
+            song_str = "{file}".format(**song).rpartition("/")[-1]
         else:
             song_str = "No song selected"
         return song_str
