@@ -12,7 +12,7 @@
 	<div ng-show="isopen" ng-repeat="(key, value) in config" class="music-container">
 
 		<div class="btn-toolbar" role="toolbar">
-			<div class="btn-group" ng-if='value["metadata"]["type"] == "music"' data-topic="{{key}}">
+			<div class="btn-group music-control" ng-if='value["metadata"]["type"] == "music"' data-topic="{{key}}">
 				<button type="button" class="btn btn-default" aria-label="Current Track">
 					Currently Playing: {{value["state"]}}
 				</button>
