@@ -1,7 +1,7 @@
 import asyncio
 import json
 import importlib
-
+import copy
 from autobahn.asyncio.websocket import WebSocketServerProtocol, \
     WebSocketServerFactory
 
@@ -94,7 +94,11 @@ class KommandozentraleServerProtocol(WebSocketServerProtocol):
                         try:
                             state = self.callMethod(req)
                             new_state = self.getState(req["switch"])
-                            new_state["return_value"] = state
+                            res = copy.copy(new_state)
+                            res["return_value"] = state
+                            res["methods"] = req["method"]
+                            res["result"] = "return_method"
+
                             self.factory.broadcast(new_state)
                         except (NotAllowedException, NotFoundException) as e:
                             error = str(e)
