@@ -19,8 +19,9 @@
 				"location": "Fenster"
 			}
 		},
-		"pajowu/mpd": {
+		"mpd": {
 			"class": "MPDSwitch",
+			"broadcast_status": true,
 			"metadata": {
 				"location": "Mucke"
 			}

@@ -75,8 +75,10 @@ class LightSwitch(SwitchClass):
 
 class MPDSwitch(SwitchClass):
     class_metadata = {"type":"music"}
+    metadata = {}
     client = None
     state = {}
+    broadcast_status = False
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.getMPDClient()
@@ -97,7 +99,7 @@ class MPDSwitch(SwitchClass):
         """ This function calls itself every second to check for config changes """
 
         self.getMPDClient()
-        state = self.getState(status=False)
+        state = self.getState(status=self.broadcast_status)
         if self.state != state:
             self.state = state
             state = self.getState()
