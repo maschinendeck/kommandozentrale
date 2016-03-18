@@ -7,7 +7,6 @@ The server currently only runs on Python 3. To install all dependencies, simply 
 
 ## Start it
 
-
 ###Backend
 
 `python server.py`
